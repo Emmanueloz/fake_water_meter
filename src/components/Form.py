@@ -244,6 +244,7 @@ class Form(Container):
             turbidity=float(self.turbidity_field.value)
         )
         DatabaseManager.add(record)
+        self.select_records.value = self.name_record.value
         self.update_list_records()
 
     def btn_update_record_click(self, e):
