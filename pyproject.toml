@@ -1,5 +1,5 @@
 [project]
-name = "first-flet-app"
+name = "fake-water-meter"
 version = "0.1.0"
 description = ""
 readme = "README.md"
@@ -8,7 +8,10 @@ authors = [
     { name = "Flet developer", email = "you@example.com" }
 ]
 dependencies = [
-  "flet==0.27.6"
+    "flet>=0.27.6",
+    "sqlalchemy>=2.0.40",
+    "python-socketio[client]>=5.13.0",
+    "websocket-client>=1.8.0"  # Dependencia importante para el cliente
 ]
 
 [tool.flet]

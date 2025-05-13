@@ -88,7 +88,10 @@ class DatabaseManager:
     @classmethod
     def get_first(cls, model: Base):
         with cls._session() as s:
-            return s.query(model).first()._to_dict()
+            r = s.query(model).first()
+            if r:
+                return r._to_dict()
+            return None
 
     @classmethod
     def get_all(cls, model: Base):

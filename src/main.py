@@ -20,10 +20,10 @@ async def main(page: ft.Page):
 
     page.appbar = ft.AppBar(
         title=ft.Text("Fake Water Meter"),
-        bgcolor=ft.colors.SURFACE_VARIANT,
+        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
         actions=[
             ft.IconButton(
-                icon=ft.icons.SETTINGS,
+                icon=ft.Icons.SETTINGS,
                 on_click=lambda e: conn_config_dialog.on_open(page)
             )
         ],

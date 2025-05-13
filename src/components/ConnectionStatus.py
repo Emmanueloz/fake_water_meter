@@ -1,4 +1,4 @@
-from flet import Row, Text, colors, icons
+from flet import Row, Text, Colors
 
 from context.AppContext import AppContext
 from enums.events import Events
@@ -29,17 +29,17 @@ class ConnectionStatus(Row):
     def handler_connection_success(self, message: str):
         print(f"Connection success: {message}")
         self.message.value = message
-        self.message.color = colors.GREEN_500
+        self.message.color = Colors.GREEN_500
 
     def handler_connection_error(self, message: str):
         print(f"Connection error: {message}")
         self.message.value = message
-        self.message.color = colors.RED_500
+        self.message.color = Colors.RED_500
 
     def handler_closed(self, message: str):
         print(f"Connection closed: {message}")
         self.message.value = message
-        self.message.color = colors.WHITE
+        self.message.color = Colors.WHITE
 
     def handler_loop_started(self, is_started: bool):
         socket = AppContext.get_socket()
@@ -47,4 +47,4 @@ class ConnectionStatus(Row):
             return
 
         self.message.value = "Loop started" if is_started else "Connected"
-        self.message.color = colors.GREEN_500
+        self.message.color = Colors.GREEN_500
