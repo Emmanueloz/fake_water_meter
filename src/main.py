@@ -11,37 +11,43 @@ DatabaseManager.init()
 
 
 async def main(page: ft.Page):
-
     AppContext.set_page(page)
-
     conn_config_dialog = ConnConfigDialog()
+
+    # Configuración clave para comportamiento nativo
+    page.scroll = ft.ScrollMode.HIDDEN  # Scroll activado pero sin barra visible
+    page.auto_scroll = False  # Evita saltos automáticos
 
     page.appbar = ft.AppBar(
         title=ft.Text("Fake Water Meter"),
         bgcolor=ft.colors.SURFACE_VARIANT,
         actions=[
             ft.IconButton(
-                icon=ft.Icons.SETTINGS,
-                # on_click=lambda e: page.open(conn_config_dialog)
+                icon=ft.icons.SETTINGS,
                 on_click=lambda e: conn_config_dialog.on_open(page)
             )
         ],
     )
 
-    form = Form()
-    connection_status = ConnectionStatus()
-    list_sends = ListSends()
+    # Contenedor principal con expansión controlada
+    content = ft.Column(
+        scroll=ft.ScrollMode.AUTO,  # Scroll manual
+        spacing=20,  # Espacio entre controles
+        controls=[
+            ft.Text("Water Meter", size=30),
+            Form(),  # Asegúrate que no tenga auto-scroll interno
+            ConnectionStatus(),
+            ListSends(),  # Verifica que sus hijos no fuerzen scroll
+        ]
+    )
 
+    # Layout final (ajusta el padding para Android)
     page.add(
-        ft.SafeArea(
-            ft.Column(
-                [
-                    ft.Text("Water Meter", size=30),
-                    form,
-                    connection_status,
-                    list_sends,
-                ]
-            )
+        ft.Container(
+            content=content,
+            # Evita cortes en bordes
+            padding=ft.padding.only(top=10, bottom=50),
+            expand=True  # Ocupa todo el espacio disponible
         )
     )
 
