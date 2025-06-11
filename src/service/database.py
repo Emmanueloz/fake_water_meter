@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Text, Integer, Float
-from sqlalchemy.orm import DeclarativeBase, sessionmaker, scoped_session, Query
+from sqlalchemy import Engine, create_engine, Column, Text, Integer, Float
+from sqlalchemy.orm import DeclarativeBase, sessionmaker, scoped_session, Session
 from contextlib import contextmanager
 
 
@@ -51,8 +51,8 @@ class RecordModel(Base):
 
 
 class DatabaseManager:
-    _engine = None
-    _Session = None
+    _engine: Engine
+    _Session:  scoped_session[Session]
 
     @classmethod
     def init(cls, db_url="sqlite:///app.db"):
@@ -83,12 +83,12 @@ class DatabaseManager:
     @classmethod
     def get(cls, model: Base, obj_id):
         with cls._session() as s:
-            return s.get(model, obj_id)._to_dict()
+            return s.get(model, obj_id)._to_dict()  # type: ignore
 
     @classmethod
     def get_first(cls, model: Base):
         with cls._session() as s:
-            r = s.query(model).first()
+            r = s.query(model).first()  # type: ignore
             if r:
                 return r._to_dict()
             return None
@@ -96,7 +96,7 @@ class DatabaseManager:
     @classmethod
     def get_all(cls, model: Base):
         with cls._session() as s:
-            list_records = s.query(model).all()
+            list_records = s.query(model).all()  # type: ignore
             return [record._to_dict() for record in list_records]
 
     @classmethod
@@ -104,7 +104,7 @@ class DatabaseManager:
 
         with cls._session() as s:
 
-            obj = s.get(model, obj_id)
+            obj = s.get(model, obj_id)  # type: ignore
 
             if obj:
                 for k, v in kwargs.items():
