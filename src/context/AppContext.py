@@ -7,11 +7,11 @@ from service.send_socketio import SocketClient
 
 class AppContext:
 
-    _page: Page = None
-    _listeners: dict[Events, list[callable]] = {}
-    _socket: SocketClient = None
-    _loop_started: bool = False,
-    _record_selected: str = None
+    _page: Page | None = None
+    _listeners: dict[Events, list[callable]] = {}  # type: ignore
+    _socket: SocketClient | None = None
+    _loop_started: bool = False
+    _record_selected: str | None = None
 
     @classmethod
     def set_record_selected(cls, value: str):
@@ -36,7 +36,7 @@ class AppContext:
         cls._page = page
 
     @classmethod
-    def get_page(cls) -> Page:
+    def get_page(cls) -> Page | None:
         return cls._page
 
     @classmethod
@@ -51,10 +51,11 @@ class AppContext:
         else:
             cls._notify_listeners(Events.CONNECTION_ERROR, "Error")
 
-        cls._page.update()
+        if cls._page is not None:
+            cls._page.update()
 
     @classmethod
-    def get_socket(cls) -> SocketClient:
+    def get_socket(cls) -> SocketClient | None:
         return cls._socket
 
     @classmethod
@@ -78,22 +79,23 @@ class AppContext:
         cls._notify_listeners(Events.CLEAR_LIST)
 
     @classmethod
-    def add_listener(cls, event: Events, callback: callable):
+    def add_listener(cls, event: Events, callback: callable):  # type: ignore
         if event not in cls._listeners:
             cls._listeners[event] = []
         cls._listeners[event].append(callback)
 
     @classmethod
-    def remove_listener(cls, event: Events, callback: callable):
+    def remove_listener(cls, event: Events, callback: callable):  # type: ignore
         if event in cls._listeners and callback in cls._listeners[event]:
             cls._listeners[event].remove(callback)
 
     @classmethod
-    def _notify_listeners(cls, event: Events, value: str = None):
+    def _notify_listeners(cls, event: Events, value=None):
         print(cls._listeners)
         print(f"Notifying listeners for event: {event}, value: {value}")
 
         if event in cls._listeners:
             for callback in cls._listeners[event]:
                 callback(value)
-            cls._page.update()
+            if cls._page is not None:
+                cls._page.update()

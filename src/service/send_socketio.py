@@ -19,7 +19,7 @@ class SocketClient:
     def __init__(self, server_url: str, access_token: str):
         self.server_url = server_url
         self.access_token = access_token
-        self.sio = None
+        self.sio: socketio.Client | None = None
         self.state = ConnectionState.DISCONNECTED
         self.logger = self._setup_logger()
         self._connect_timeout = 5
@@ -78,6 +78,10 @@ class SocketClient:
                 self.state = ConnectionState.DISCONNECTED
 
     def send_message(self, data: dict) -> bool:
+        if self.sio is None:
+            self.logger.warning("Intento de enviar mensaje sin conexión")
+            return False
+
         if not self.is_connected():
             self.logger.warning(
                 "Intento de enviar mensaje sin conexión válida")
