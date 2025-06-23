@@ -51,7 +51,7 @@ class RecordModel(Base):
 
 
 class DatabaseManager:
-    _engine: Engine
+    _engine: Engine | None = None
     _Session:  scoped_session[Session]
 
     @classmethod
