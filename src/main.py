@@ -1,5 +1,6 @@
 import flet as ft
 from flet import MainAxisAlignment
+from components.ControlButtons import ControlButtons
 from components.TabForms import TabForms
 from components.ConnConfig import ConnConfigDialog
 from components.ListSends import ListSends
@@ -50,6 +51,7 @@ async def main(page: ft.Page):
                             ConnectionStatus()
                         ],
                     ),
+                    ControlButtons(),
                     ft.Container(
                         content=TabForms(),
                         expand=True,

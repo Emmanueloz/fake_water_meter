@@ -1,4 +1,5 @@
 from flet import Tabs, Tab, Container,  Text, Alignment
+from components.RandomRecords import RandomRecords
 from components.Form import Form
 
 
@@ -15,9 +16,7 @@ class TabForms(Tabs):
             ),
             Tab(
                 text="Aleatorio",
-                content=Container(
-                    content=Text("Datos aleatorio")
-                )
+                content=RandomRecords()
             )
 
         ]
