@@ -1,4 +1,5 @@
 import flet as ft
+from flet import MainAxisAlignment,CrossAxisAlignment
 from components.ConnConfig import ConnConfigDialog
 from components.ListSends import ListSends
 from components.ConnectionStatus import ConnectionStatus
@@ -29,26 +30,38 @@ async def main(page: ft.Page):
         ],
     )
 
-    # Contenedor principal con expansión controlada
-    content = ft.Column(
-        scroll=ft.ScrollMode.AUTO,  # Scroll manual
-        spacing=20,  # Espacio entre controles
+    # Contenido responsivo
+    content = ft.ResponsiveRow(
+        spacing=20,
+        run_spacing=20,
+        expand=True,
         controls=[
-            ft.Text("Water Meter", size=30),
-            Form(),  # Asegúrate que no tenga auto-scroll interno
-            ConnectionStatus(),
-            ListSends(),  # Verifica que sus hijos no fuerzen scroll
+            # Columna izquierda (Form y ConnectionStatus)
+            ft.Column(
+                col={"sm": 12, "md": 6},
+                spacing=20,
+                expand=True,
+                controls=[
+                    ft.Row(
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("Water Meter", size=30),
+                            ConnectionStatus()
+                        ],
+                    ),
+                    Form()
+                ]
+            ),
+            ListSends(
+                col={"sm": 12, "md": 6},
+            )
         ]
     )
 
     # Layout final (ajusta el padding para Android)
     page.add(
-        ft.Container(
-            content=content,
-            # Evita cortes en bordes
-            padding=ft.padding.only(top=10, bottom=50),
-            expand=True  # Ocupa todo el espacio disponible
-        )
+        content
     )
 
 

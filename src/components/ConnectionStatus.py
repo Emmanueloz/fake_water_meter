@@ -22,7 +22,7 @@ class ConnectionStatus(Row):
             size=20,
         )
         self.controls = [
-            Text("Connection Status", size=20),
+            Text("Status", size=20),
             self.message,
         ]
 

@@ -9,15 +9,17 @@ class ListSends(Container):
     list_view = ListView(
         spacing=5,
         padding=5,
-        height=300,
         auto_scroll=True,
+        expand=True,
         controls=[]
     )
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.border = border.all(width=1, color=Colors.SURFACE_TINT)
         self.border_radius = 10
+        self.height = 450
+        self.expand = True
 
         AppContext.add_listener(Events.SEND_SUCCESS, self.add)
         AppContext.add_listener(Events.CLEAR_LIST, self.clear)
