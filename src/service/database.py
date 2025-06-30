@@ -55,7 +55,7 @@ class DatabaseManager:
     _Session:  scoped_session[Session]
 
     @classmethod
-    def init(cls, db_url="sqlite:///app.db"):
+    def init(cls, db_url="sqlite:///storage/app.sqlite"):
         if not cls._engine:
             cls._engine = create_engine(db_url)
             cls._Session = scoped_session(sessionmaker(bind=cls._engine))
