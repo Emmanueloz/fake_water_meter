@@ -18,7 +18,7 @@ class ListSends(Container):
         super().__init__(*args, **kwargs)
         self.border = border.all(width=1, color=Colors.SURFACE_TINT)
         self.border_radius = 10
-        self.height = 450
+        self.height = 400
         self.expand = True
 
         AppContext.add_listener(Events.SEND_SUCCESS, self.add)

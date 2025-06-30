@@ -1,9 +1,9 @@
 import flet as ft
-from flet import MainAxisAlignment,CrossAxisAlignment
+from flet import MainAxisAlignment
+from components.TabForms import TabForms
 from components.ConnConfig import ConnConfigDialog
 from components.ListSends import ListSends
 from components.ConnectionStatus import ConnectionStatus
-from components.Form import Form
 from context.AppContext import AppContext
 from service.database import DatabaseManager
 
@@ -50,7 +50,11 @@ async def main(page: ft.Page):
                             ConnectionStatus()
                         ],
                     ),
-                    Form()
+                    ft.Container(
+                        content=TabForms(),
+                        expand=True,
+                        height=500,
+                    )
                 ]
             ),
             ListSends(
@@ -59,10 +63,8 @@ async def main(page: ft.Page):
         ]
     )
 
-    # Layout final (ajusta el padding para Android)
-    page.add(
-        content
-    )
+    # Layout final
+    page.add(content)
 
 
 ft.app(main)
