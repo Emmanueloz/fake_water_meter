@@ -8,7 +8,7 @@ from service.database import ConnectionConfigModel, DatabaseManager, RecordModel
 
 class Form(Container):
 
-    list_records: list[RecordModel] = []
+    list_records: list[dict] = []
     list_options: list[DropdownOption] = []
 
     name_record = TextField(
@@ -116,21 +116,6 @@ class Form(Container):
             visible=False
         )
 
-        self.btn_connect = ElevatedButton(
-            text="Start",
-            color=Colors.SURFACE,
-            bgcolor=Colors.SURFACE_TINT,
-            on_click=self.btn_click
-        )
-
-        self.btn_disconnect = ElevatedButton(
-            text="Stop",
-            color=Colors.SURFACE,
-            bgcolor=Colors.SURFACE_TINT,
-            on_click=self.btn_disconnect_click,
-            visible=False
-        )
-
         self.btn_loop_send = ElevatedButton(
             text="Loop Send",
             color=Colors.SURFACE,
@@ -145,13 +130,6 @@ class Form(Container):
             bgcolor=Colors.SURFACE_TINT,
             on_click=self.btn_loop_close_click,
             visible=False
-        )
-
-        self.btn_clear = ElevatedButton(
-            text="Clear",
-            color=Colors.SURFACE,
-            bgcolor=Colors.SURFACE_TINT,
-            on_click=self.btn_clear_click
         )
 
         self.padding = 10
@@ -178,23 +156,22 @@ class Form(Container):
                 self.turbidity_field,
                 Row(
                     [
-                        self.btn_connect,
-                        self.btn_disconnect,
                         self.btn_loop_send,
                         self.btn_loop_close,
-                        self.btn_clear,
                     ],
                 ),
             ]
         )
 
     def update_list_records(self, is_update: bool = True):
-        self.list_records = DatabaseManager.get_all(RecordModel)
+        self.list_records = DatabaseManager.get_all(
+            RecordModel)  # type: ignore
         list_options = [DropdownOption(text="New")]
         for record in self.list_records:
-            list_options.append(DropdownOption(text=record["title"]))
+            list_options.append(DropdownOption(
+                text=record["title"]))  # type: ignore
 
-        self.select_records.options = list_options
+        self.select_records.options = list_options  # type: ignore
         if is_update:
             self.update()
 
@@ -234,14 +211,14 @@ class Form(Container):
     def btn_save_record_click(self, e):
         record = RecordModel(
             title=self.name_record.value,
-            color_r=int(self.color_r_field.value),
-            color_g=int(self.color_g_field.value),
-            color_b=int(self.color_b_field.value),
-            conductivity=float(self.conductivity_field.value),
-            ph=float(self.ph_field.value),
-            temperature=float(self.temperature_field.value),
-            tds=float(self.tds_field.value),
-            turbidity=float(self.turbidity_field.value)
+            color_r=int(self.color_r_field.value or 0),
+            color_g=int(self.color_g_field.value or 0),
+            color_b=int(self.color_b_field.value or 0),
+            conductivity=float(self.conductivity_field.value or 0),
+            ph=float(self.ph_field.value or 0),
+            temperature=float(self.temperature_field.value or 0),
+            tds=float(self.tds_field.value or 0),
+            turbidity=float(self.turbidity_field.value or 0)
         )
         DatabaseManager.add(record)
         self.select_records.value = self.name_record.value
@@ -253,17 +230,17 @@ class Form(Container):
             if record["title"] == self.select_records.value:
                 print(record)
                 DatabaseManager.update(
-                    RecordModel,
+                    RecordModel,  # type: ignore
                     record["id"],
                     title=self.name_record.value,
-                    color_r=int(self.color_r_field.value),
-                    color_g=int(self.color_g_field.value),
-                    color_b=int(self.color_b_field.value),
-                    conductivity=float(self.conductivity_field.value),
-                    ph=float(self.ph_field.value),
-                    temperature=float(self.temperature_field.value),
-                    tds=float(self.tds_field.value),
-                    turbidity=float(self.turbidity_field.value)
+                    color_r=int(self.color_r_field.value or 0),
+                    color_g=int(self.color_g_field.value or 0),
+                    color_b=int(self.color_b_field.value or 0),
+                    conductivity=float(self.conductivity_field.value or 0),
+                    ph=float(self.ph_field.value or 0),
+                    temperature=float(self.temperature_field.value or 0),
+                    tds=float(self.tds_field.value or 0),
+                    turbidity=float(self.turbidity_field.value or 0)
                 )
                 self.select_records.value = self.name_record.value
                 self.update_list_records()
@@ -271,22 +248,16 @@ class Form(Container):
 
     def handler_con_success(self, message: str):
         print(message)
-        self.btn_connect.visible = False
-        self.btn_disconnect.visible = True
         self.btn_loop_send.visible = True
         self.btn_loop_close.visible = False
 
     def handler_con_error(self, message: str):
         print(message)
-        self.btn_connect.visible = True
-        self.btn_disconnect.visible = False
         self.btn_loop_send.visible = False
         self.btn_loop_close.visible = False
 
     def handler_con_closed(self, message: str):
         print(message)
-        self.btn_connect.visible = True
-        self.btn_disconnect.visible = False
         self.btn_loop_send.visible = False
         self.btn_loop_close.visible = False
 
@@ -303,7 +274,7 @@ class Form(Container):
 
     def btn_click(self, e):
 
-        conn = DatabaseManager.get_first(ConnectionConfigModel)
+        conn = DatabaseManager.get_first(ConnectionConfigModel)  # type: ignore
 
         host = conn["host"] if conn else "http://127.0.0.1:8000/"
         token = conn["token"] if conn else ""
@@ -321,15 +292,15 @@ class Form(Container):
         while AppContext.get_loop_started():
             AppContext.send_data({
                 "color": {
-                    "r": int(self.color_r_field.value),
-                    "g": int(self.color_g_field.value),
-                    "b": int(self.color_b_field.value)
+                    "r": int(self.color_r_field.value or 0),
+                    "g": int(self.color_g_field.value or 0),
+                    "b": int(self.color_b_field.value or 0)
                 },
-                "conductivity": float(self.conductivity_field.value),
-                "ph": float(self.ph_field.value),
-                "temperature": float(self.temperature_field.value),
-                "tds": float(self.tds_field.value),
-                "turbidity": float(self.turbidity_field.value)
+                "conductivity": float(self.conductivity_field.value or 0),
+                "ph": float(self.ph_field.value or 0),
+                "temperature": float(self.temperature_field.value or 0),
+                "tds": float(self.tds_field.value or 0),
+                "turbidity": float(self.turbidity_field.value or 0)
             })
             time.sleep(5)
 
