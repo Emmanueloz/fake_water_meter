@@ -14,7 +14,7 @@ class ConnectionConfigModel(Base):
     host = Column(Text)
     token = Column(Text)
 
-    def _to_dict(self):
+    def to_dict(self):
         return {
             "id": self.id,
             "host": self.host,
@@ -35,7 +35,7 @@ class RecordModel(Base):
     tds = Column(Float)
     turbidity = Column(Float)
 
-    def _to_dict(self):
+    def to_dict(self):
         return {
             "id": self.id,
             "title": self.title,
@@ -52,11 +52,13 @@ class RecordModel(Base):
 
 class DatabaseManager:
     _engine: Engine | None = None
-    _Session:  scoped_session[Session]
+    _Session:  scoped_session[Session] | None = None
 
     @classmethod
     def init(cls, db_url="sqlite:///storage/app.sqlite"):
         if not cls._engine:
+            import os
+            os.makedirs('storage', exist_ok=True)
             cls._engine = create_engine(db_url)
             cls._Session = scoped_session(sessionmaker(bind=cls._engine))
             Base.metadata.create_all(cls._engine)
@@ -64,6 +66,9 @@ class DatabaseManager:
     @classmethod
     @contextmanager
     def _session(cls):
+        if cls._Session is None:
+            raise RuntimeError(
+                "Database not initialized. Call DatabaseManager.init() first.")
         session = cls._Session()
         try:
             yield session
@@ -83,21 +88,21 @@ class DatabaseManager:
     @classmethod
     def get(cls, model: Base, obj_id):
         with cls._session() as s:
-            return s.get(model, obj_id)._to_dict()  # type: ignore
+            return s.get(model, obj_id).to_dict()  # type: ignore
 
     @classmethod
     def get_first(cls, model: Base):
         with cls._session() as s:
             r = s.query(model).first()  # type: ignore
             if r:
-                return r._to_dict()
+                return r.to_dict()
             return None
 
     @classmethod
     def get_all(cls, model: Base):
         with cls._session() as s:
             list_records = s.query(model).all()  # type: ignore
-            return [record._to_dict() for record in list_records]
+            return [record.to_dict() for record in list_records]
 
     @classmethod
     def update(cls, model: Base, obj_id, **kwargs):
