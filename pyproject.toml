@@ -5,40 +5,46 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "Flet developer", email = "you@example.com" }
+    { name = "David Emmanuel Ozuna", email = "davidozuna84@hotmail.com" },
 ]
 dependencies = [
     "flet>=0.27.6",
     "sqlalchemy>=2.0.40",
     "python-socketio[client]>=5.13.0",
-    "websocket-client>=1.8.0"  # Dependencia importante para el cliente
+    "websocket-client>=1.8.0",         # Dependencia importante para el cliente
 ]
 
 [tool.flet]
 # org name in reverse domain name notation, e.g. "com.mycompany".
 # Combined with project.name to build bundle ID for iOS and Android apps
-org = "com.mycompany"
+org = "org.aqua-minds"
 
 # project display name that is used as an app title on Android and iOS home screens,
 # shown in window titles and about app dialogs on desktop.
-product = "first-flet-app"
+product = "fake-water-meter"
 
 # company name to display in about app dialogs
-company = "Flet"
+company = "MINDS"
 
 # copyright text to display in about app dialogs
-copyright = "Copyright (C) 2025 by Flet"
+copyright = "Copyright (C) 2025 by MINDS"
 
 [tool.flet.app]
 path = "src"
 
 [tool.uv]
-dev-dependencies = [
-    "flet[all]==0.27.6",
-]
+dev-dependencies = ["flet[all]==0.27.6"]
 
 [tool.poetry]
 package-mode = false
 
 [tool.poetry.group.dev.dependencies]
-flet = {extras = ["all"], version = "0.27.6"}
+flet = { extras = ["all"], version = "0.27.6" }
+
+[tool.flet.splash]
+color = "#73869eff"
+dark_color = "#111418"
+
+[tool.flet.app.boot_screen]
+show = true
+message = "Preparing the app for its first launch…"
